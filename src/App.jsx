@@ -16,20 +16,24 @@ import PageNotFound from './pages/404/pageNotFound';
 
 function App() {
   const dispatch = useDispatch();
-  const {url} = useSelector((state)=> {
-    return state.home;
-  });
+  const {url} = useSelector((state)=> state.home);
+  console.log("store", url)
 
-  console.log( "url", url)
 
   useEffect(()=>{
-    apiTesting();
+    fetchApiConfig();
   }, []);
 
-  const apiTesting = () =>{
-    fetchDataFromApi("/movie/popular").then((res)=>{
+  const fetchApiConfig = () =>{
+    fetchDataFromApi("/configuration").then((res)=>{
       console.log("response", res);
-      dispatch(getApiConfiguration(res))
+      const url = {
+        backdrop : res.images.secure_base_url + "original",
+        poster:  res.images.secure_base_url + "original",
+        profile : res.images.secure_base_url + "original",
+      };
+      
+      dispatch(getApiConfiguration(url))
     });
   };
 
