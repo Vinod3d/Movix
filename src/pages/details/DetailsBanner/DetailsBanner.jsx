@@ -12,7 +12,7 @@ import CircleRating from "../../../components/circleRating/CircleRating";
 import Img from "../../../components/lazyLoadImage/Img.jsx";
 import PosterFallback from "../../../assets/no-poster.png";
 import { PlayIcon } from "../Playbtn";
-// import VideoPopup from "../../../components/videoPopup/VideoPopup";
+import VideoPopup from "../../../components/videoPopup/VideoPopup";
 
 const DetailsBanner = ({ video, crew }) => {
     const [show, setShow] = useState(false);
@@ -41,9 +41,9 @@ const DetailsBanner = ({ video, crew }) => {
             {!loading ? (
                 <>
                     {!!data && (
-                        <>
+                        <React.Fragment>
                             <div className="backdrop-img">
-                                <Img src={url.backdrop + data?.backdrop_path}/>
+                                <Img src={url.backdrop + data.backdrop_path} />
                             </div>
                             <div className="opacity-layer"></div>
                             <ContentWrapper>
@@ -52,7 +52,7 @@ const DetailsBanner = ({ video, crew }) => {
                                         {data.poster_path ? (
                                             <Img 
                                                 className="posterImg"
-                                                src={url.backdrop + data?.backdrop_path}
+                                                src={url.backdrop + data?.poster_path}
                                             />
                                         ) : (
                                             <Img 
@@ -75,7 +75,10 @@ const DetailsBanner = ({ video, crew }) => {
                                                 rating={data.vote_average.toFixed(1)}
                                             />
                                             <div className="playbtn" 
-                                                onClick={()=> {}}
+                                                onClick={()=> {
+                                                    setShow(true)
+                                                    setVideoId(video.key)
+                                                }}
                                             >
                                                 <PlayIcon/>
                                                 <span className="text">
@@ -121,10 +124,67 @@ const DetailsBanner = ({ video, crew }) => {
                                                 </div>
                                             )}
                                         </div>
+
+                                        {director?.length > 0 && (
+                                            <div className="info">
+                                                <span className="text bold">
+                                                    Director:
+                                                </span>
+
+                                                <span className="text">
+                                                    {director?.map((d, i)=>(
+                                                        <span key={i}>
+                                                            {d.name}
+                                                            {director.length - 1 !== i && ", "}
+                                                        </span>
+                                                    ))}
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        {writer?.length > 0 && (
+                                            <div className="info">
+                                                <span className="text bold">
+                                                    writer:
+                                                </span>
+
+                                                <span className="text">
+                                                    {writer?.map((d, i)=>(
+                                                        <span key={i}>
+                                                            {d.name}
+                                                            {writer.length - 1 !== i && ", "}
+                                                        </span>
+                                                    ))}
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        {data?.created_by?.length > 0 && (
+                                            <div className="info">
+                                                <span className="text bold">
+                                                    Creator:
+                                                </span>
+
+                                                <span className="text">
+                                                    {data?.created_by?.map((d, i)=>(
+                                                        <span key={i}>
+                                                            {d.name}
+                                                            {data?.created_by.length - 1 !== i && ", "}
+                                                        </span>
+                                                    ))}
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
+                                <VideoPopup
+                                    show={show}
+                                    setShow={setShow}
+                                    videoId={videoId}
+                                    setVideoId={setVideoId}
+                                />
                             </ContentWrapper>
-                        </>
+                        </React.Fragment>
                     )}
                 </>
             ) : (
